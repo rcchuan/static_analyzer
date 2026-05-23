@@ -10,7 +10,6 @@ from analysis.cfg_builder import CFGBuilder
 from analysis.dataflow import DataFlowAnalyzer
 from analysis.taint_analyzer import TaintAnalyzer
 from analysis.pattern_detector import PatternDetector
-from analysis.slicer import ProgramSlicer
 from analysis.fix_generator import FixGenerator
 from analysis.java_detector import detect_java_issues
 from analysis.cpp_detector import detect_cpp_issues
@@ -129,7 +128,6 @@ def detect_language(code: str, filename: str = "") -> Language:
 class AnalysisEngine:
     def __init__(self):
         self.cfg_builder = CFGBuilder()
-        self.slicer = ProgramSlicer()
         self.fix_gen = FixGenerator()
 
     def analyze(self, code: str, filename: str = "",
@@ -192,7 +190,3 @@ class AnalysisEngine:
         else:
             parser = GenericParser(language)
         return parser.parse(code)
-
-    def slice(self, result: AnalysisResult, line: int, var: str) -> str:
-        slice_lines = self.slicer.backward_slice(result, line, var)
-        return self.slicer.format_slice(result.source_lines, slice_lines, line, var)

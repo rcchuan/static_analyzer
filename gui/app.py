@@ -14,7 +14,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from analysis.engine import AnalysisEngine, detect_language
 from core.ir import Language, AnalysisIssue
 from gui.widgets import (IssueTreeView, CodeViewer, CFGViewer,
-                          StatusBar, ToolbarButton, SliceDialog)
+                          StatusBar, ToolbarButton)
 
 
 THEME = {
@@ -113,7 +113,6 @@ class StaticAnalyzerApp:
 
         self._make_toolbar_btn(toolbar, "📂 打开文件", self._open_file)
         self._make_toolbar_btn(toolbar, "▶ 开始分析", self._run_analysis, accent=True)
-        self._make_toolbar_btn(toolbar, "🔪 程序切片", self._show_slice_dialog)
         self._make_toolbar_btn(toolbar, "💾 导出报告", self._export_report)
         self._make_toolbar_btn(toolbar, "🗑 清空", self._clear_all)
 
@@ -473,28 +472,6 @@ class StaticAnalyzerApp:
                  or search in str(i.line))
         ]
         self.issue_tree.load_issues(filtered)
-
-    def _show_slice_dialog(self):
-        if not self.current_result:
-            messagebox.showinfo("提示", "请先运行分析。")
-            return
-        dlg = SliceDialog(self.root, THEME)
-        self.root.wait_window(dlg.dialog)
-        if dlg.result:
-            line, var = dlg.result
-            slice_output = self.engine.slice(self.current_result, line, var)
-            self._show_text_window("程序切片结果", slice_output)
-
-    def _show_text_window(self, title: str, text: str):
-        win = tk.Toplevel(self.root)
-        win.title(title)
-        win.geometry("700x500")
-        win.configure(bg=THEME["bg_dark"])
-        txt = scrolledtext.ScrolledText(win, bg=THEME["bg_dark"], fg=THEME["text"],
-                                         font=("Consolas", 10), wrap=tk.WORD, relief=tk.FLAT)
-        txt.pack(fill=tk.BOTH, expand=True, padx=8, pady=8)
-        txt.insert("1.0", text)
-        txt.config(state=tk.DISABLED)
 
     def _export_report(self):
         if not self.current_result:
