@@ -1,26 +1,28 @@
-# Python
-__pycache__/
-*.py[cod]
-*.egg-info/
-dist/
-build/
-*.egg
-.eggs/
+# IDE
+.idea/
 
-# Virtual environments
-venv/
+# Python virtual environment
 .venv/
+venv/
 env/
 
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+*.egg
 
 # OS
 .DS_Store
 Thumbs.db
 
-# Logs
-*.log
+# Coverage
+.coverage
+htmlcov/
+.pytest_cache/
