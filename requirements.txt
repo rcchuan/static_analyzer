@@ -1,0 +1,9 @@
+# MultiLang Static Code Analyzer - Dependencies
+# All core functionality uses Python standard library only
+
+# Optional: for packaging as executable
+pyinstaller>=5.0
+
+# Optional: enhanced analysis (not required for basic operation)
+# javalang>=0.13.0     # Java AST parser (better Java support)
+# pycparser>=2.21      # C parser
