@@ -2,7 +2,7 @@
 import ast
 import re
 from typing import List, Optional
-from core.ir import IRNode, NodeType, Language, AnalysisIssue, AnalysisResult, BasicBlock, CFGEdge
+from core.ir import IRNode, NodeType, Language, AnalysisIssue, AnalysisResult
 
 
 class PythonParser:

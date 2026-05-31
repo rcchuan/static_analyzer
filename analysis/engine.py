@@ -6,7 +6,6 @@ from typing import Optional
 from core.ir import Language, AnalysisResult
 from parsers.python_parser import PythonParser
 from parsers.generic_parser import GenericParser
-from analysis.cfg_builder import CFGBuilder
 from analysis.dataflow import DataFlowAnalyzer
 from analysis.taint_analyzer import TaintAnalyzer
 from analysis.pattern_detector import PatternDetector
@@ -127,7 +126,6 @@ def detect_language(code: str, filename: str = "") -> Language:
 
 class AnalysisEngine:
     def __init__(self):
-        self.cfg_builder = CFGBuilder()
         self.fix_gen = FixGenerator()
 
     def analyze(self, code: str, filename: str = "",
@@ -139,28 +137,25 @@ class AnalysisEngine:
         # Phase 1: Parse -> IR
         result = self._parse(code, language)
 
-        # Phase 2: Build CFG
-        result = self.cfg_builder.build(result)
-
-        # Phase 3: Data Flow Analysis
+        # Phase 2: Data Flow Analysis
         dfa = DataFlowAnalyzer(language)
         result = dfa.analyze(result)
 
-        # Phase 4: Taint Analysis
+        # Phase 3: Taint Analysis
         taint = TaintAnalyzer(language)
         result = taint.analyze(result)
 
-        # Phase 5: Pattern Detection
+        # Phase 4: Pattern Detection
         patterns = PatternDetector(language)
         result = patterns.detect(result)
 
-        # Phase 5b: Language-specific advanced detection
+        # Phase 4b: Language-specific advanced detection
         if language == Language.JAVA:
             result = detect_java_issues(result)
         elif language in (Language.CPP, Language.C):
             result = detect_cpp_issues(result)
 
-        # Phase 6: Deduplicate issues by (line, title)
+        # Phase 5: Deduplicate issues by (line, title)
         seen = set()
         unique_issues = []
         for issue in result.issues:
@@ -170,7 +165,7 @@ class AnalysisEngine:
                 unique_issues.append(issue)
         result.issues = sorted(unique_issues, key=lambda x: x.line)
 
-        # Phase 7: Generate fix report
+        # Phase 6: Generate fix report
         self.fix_gen.generate(result)
 
         # Stats
@@ -179,7 +174,6 @@ class AnalysisEngine:
             "errors": len(result.errors),
             "warnings": len(result.warnings),
             "security": len(result.security_issues),
-            "cfg_blocks": len(result.cfg_blocks),
             "lines": len(result.source_lines),
         }
         return result

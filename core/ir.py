@@ -50,34 +50,6 @@ class IRNode:
 
 
 @dataclass
-class BasicBlock:
-    id: int
-    instructions: List[IRNode] = field(default_factory=list)
-    successors: List['BasicBlock'] = field(default_factory=list)
-    predecessors: List['BasicBlock'] = field(default_factory=list)
-    label: str = ""
-    gen: Set[str] = field(default_factory=set)
-    kill: Set[str] = field(default_factory=set)
-    in_set: Set[str] = field(default_factory=set)
-    out_set: Set[str] = field(default_factory=set)
-    live_in: Set[str] = field(default_factory=set)
-    live_out: Set[str] = field(default_factory=set)
-
-    def __repr__(self):
-        return f"BB{self.id}[{len(self.instructions)} stmts]"
-
-    def __hash__(self): return hash(self.id)
-    def __eq__(self, other): return isinstance(other, BasicBlock) and self.id == other.id
-
-
-@dataclass
-class CFGEdge:
-    src: BasicBlock
-    dst: BasicBlock
-    label: str = ""
-
-
-@dataclass
 class AnalysisIssue:
     class Severity(Enum):
         ERROR = "ERROR"; WARNING = "WARNING"; INFO = "INFO"
@@ -114,8 +86,6 @@ class AnalysisResult:
     language: Language
     issues: List[AnalysisIssue] = field(default_factory=list)
     ir_root: Optional[IRNode] = None
-    cfg_blocks: List[BasicBlock] = field(default_factory=list)
-    cfg_edges: List[CFGEdge] = field(default_factory=list)
     fix_report: str = ""
     stats: Dict[str, int] = field(default_factory=dict)
     source_lines: List[str] = field(default_factory=list)

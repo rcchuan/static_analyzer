@@ -13,7 +13,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from analysis.engine import AnalysisEngine, detect_language
 from core.ir import Language, AnalysisIssue
-from gui.widgets import (IssueTreeView, CodeViewer, CFGViewer,
+from gui.widgets import (IssueTreeView, CodeViewer,
                           StatusBar, ToolbarButton)
 
 
@@ -181,18 +181,12 @@ class StaticAnalyzerApp:
         self.notebook.add(issues_frame, text="⚠ 问题列表")
         self._build_issues_tab(issues_frame)
 
-        # Tab 2: CFG
-        cfg_frame = tk.Frame(self.notebook, bg=THEME["bg_dark"])
-        self.notebook.add(cfg_frame, text="🔀 控制流图")
-        self.cfg_viewer = CFGViewer(cfg_frame, THEME)
-        self.cfg_viewer.pack(fill=tk.BOTH, expand=True)
-
-        # Tab 3: Fix Report
+        # Tab 2: Fix Report
         fix_frame = tk.Frame(self.notebook, bg=THEME["bg_dark"])
         self.notebook.add(fix_frame, text="🛠 修复方案")
         self._build_fix_tab(fix_frame)
 
-        # Tab 4: Taint Flow
+        # Tab 3: Taint Flow
         taint_frame = tk.Frame(self.notebook, bg=THEME["bg_dark"])
         self.notebook.add(taint_frame, text="☣ 污点分析")
         self._build_taint_tab(taint_frame)
@@ -366,9 +360,6 @@ class StaticAnalyzerApp:
             sev = issue.severity.value if issue.severity else "INFO"
             self.code_viewer.highlight_line(issue.line, sev)
 
-        # CFG
-        self.cfg_viewer.draw_cfg(result.cfg_blocks, result.cfg_edges)
-
         # Fix report
         self._update_fix_text(result.fix_report)
 
@@ -379,7 +370,7 @@ class StaticAnalyzerApp:
         total = stats.get('total_issues', 0)
         self.status_bar.set(
             f"✅ 分析完成 [{lang}] — 共 {total} 个问题 | "
-            f"{stats.get('lines', 0)} 行 | {stats.get('cfg_blocks', 0)} 个基本块",
+            f"{stats.get('lines', 0)} 行",
             "success")
 
     def _update_fix_text(self, text: str):
@@ -498,7 +489,6 @@ class StaticAnalyzerApp:
 
     def _clear_results(self):
         self.issue_tree.clear()
-        self.cfg_viewer.clear()
         for lbl in self.stat_labels.values():
             text = lbl.cget("text")
             emoji = text[0] if text else ""

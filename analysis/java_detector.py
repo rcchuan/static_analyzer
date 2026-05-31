@@ -57,7 +57,7 @@ def _check_method_name_typos(lines, result):
             line=i,
             severity=AnalysisIssue.Severity.ERROR,
             category=AnalysisIssue.Category.CODE_SMELL,
-            cwe_id="CWE-1078",
+            cwe_id="CWE-398",
             cwe_name="Inappropriate Source Code Style or Formatting",
             fix_suggestion=(
                 f"1. 将方法名 '{name}' 改为 '{correct}'\n"
@@ -101,7 +101,7 @@ def _check_missing_override(lines, result):
                 line=i,
                 severity=sev,
                 category=AnalysisIssue.Category.CODE_SMELL,
-                cwe_id="CWE-1078",
+                cwe_id="CWE-398",
                 cwe_name="Inappropriate Source Code Style or Formatting",
                 fix_suggestion=(
                     f"在方法声明前加上 @Override 注解：\n"
@@ -177,7 +177,7 @@ def _check_redundant_interface_modifiers(lines, result):
                 line=i,
                 severity=AnalysisIssue.Severity.INFO,
                 category=AnalysisIssue.Category.CODE_SMELL,
-                cwe_id="CWE-1078",
+                cwe_id="CWE-398",
                 cwe_name="Inappropriate Source Code Style or Formatting",
                 fix_suggestion=f"去掉 'public abstract' 修饰符，接口方法应直接写签名：\n  {simplified}",
                 code_snippet=s,
@@ -213,7 +213,7 @@ def _check_variable_naming_ambiguity(lines, result):
                 description=f"第 {i} 行的字段 '{fname}' 使用单字母命名，在非数学场景下语义不清。",
                 line=i, severity=AnalysisIssue.Severity.INFO,
                 category=AnalysisIssue.Category.CODE_SMELL,
-                cwe_id="CWE-1078", cwe_name="Inappropriate Source Code Style or Formatting",
+                cwe_id="CWE-398", cwe_name="Inappropriate Source Code Style or Formatting",
                 fix_suggestion=f"将字段 '{fname}' 改为有描述性的名称，或确保类名已清晰表达数学含义。",
                 code_snippet=line.strip(), language=Language.JAVA,
             ))
@@ -239,7 +239,7 @@ def _check_outdated_array_param(lines, result):
             ),
             line=i, severity=AnalysisIssue.Severity.INFO,
             category=AnalysisIssue.Category.CODE_SMELL,
-            cwe_id="CWE-1078", cwe_name="Inappropriate Source Code Style or Formatting",
+            cwe_id="CWE-398", cwe_name="Inappropriate Source Code Style or Formatting",
             fix_suggestion=(
                 f"将 '{type_name} {param_name}[]' 改为 '{type_name}[] {param_name}'：\n"
                 f"  public static void main({type_name}[] {param_name})"
